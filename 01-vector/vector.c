@@ -13,7 +13,7 @@ Vector *vector_init(int initial_capacity) {
 
     vector->size = 0;
     vector->capacity = capacity;
-    vector->data = malloc(sizeof(vector) * capacity);
+    vector->data = malloc(sizeof(int) * capacity);
 
 }
 
