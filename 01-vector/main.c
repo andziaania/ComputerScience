@@ -13,8 +13,6 @@ void test_determine_capacity();
 
 
 int main() {
-    printf("rest");
-
     test_initialization();
     test_determine_capacity();
     return 0;
@@ -27,6 +25,8 @@ void test_initialization() {
     assert(v->capacity == 16);
 
     vector_destroy(v);
+    printf("OK -- test_initialization\n");
+
 }   
 
 
@@ -43,4 +43,6 @@ void test_determine_capacity() {
 
     int val4 = determine_capacity(32);
     assert(val4 == 64);
+
+    printf("OK -- test_determine_capacity\n");
 }

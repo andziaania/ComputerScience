@@ -2,13 +2,6 @@
 
 #include "vector.h"
 
-typedef struct Vector {
-    int *data;
-    int size;
-    int capacity;
-} Vector;
-
-
 int determine_capacity(int initial_capacity);
 
 
