@@ -67,8 +67,10 @@ int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
 	value |= value >> 2;  // handle  4 bit numbers
 	value |= value >> 4;  // handle  8 bit numbers
 	value |= value >> 8;  // handle 16 bit numbers
-	value |= value >> 16; // handle 32 bit numbers
-   	value++;
+	if (sizeof(value) > 2) {
+		value |= value >> 16; // handle 32 bit numbers
+	}
+	value++;
 	return value;	
 }
 
