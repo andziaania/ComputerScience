@@ -147,20 +147,23 @@ void test_v_at() {
 }
 
 void test_determine_capacity() {
-    size_t val0 = determine_capacity(-1);
-    assert(val0 == 16);
-
-    size_t val1 = determine_capacity(0);
+    size_t val1 = get_the_round_up_to_the_next_power_of_two(0);
     assert(val1 == 16);
 
-    size_t val2 = determine_capacity(16);
-    assert(val2 == 32);
+    size_t val2 = get_the_round_up_to_the_next_power_of_two(16);
+    assert(val2 == 16);
 
-    size_t val3 = determine_capacity(17);
+    size_t val3 = get_the_round_up_to_the_next_power_of_two(17);
     assert(val3 == 32);
 
-    size_t val4 = determine_capacity(32);
-    assert(val4 == 64);
+    size_t val4 = get_the_round_up_to_the_next_power_of_two(32);
+    assert(val4 == 32);
+
+    size_t val5 = get_the_round_up_to_the_next_power_of_two(2^9 - 3);
+    assert(val5 == 2^9);
+
+    size_t val6 = get_the_round_up_to_the_next_power_of_two(2^9);
+    assert(val6 == 2^9);
 
     printf("OK -- test_determine_capacity\n");
 }

@@ -39,7 +39,7 @@ int v_pop(Vector *vector);
 
 /***** internal methods *****/
 
-int determine_capacity(int initial_capacity);
+int get_the_round_up_to_the_next_power_of_two(unsigned int initial_capacity);
 
 void double_capacitize_vector_if_needed(Vector* vector);
 

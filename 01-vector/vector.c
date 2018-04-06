@@ -1,9 +1,9 @@
 
-Vector *v_init(unsigned int initial_capacity) {
+Vector *v_init(unsigned int requested_capacity) {
     
     Vector *vector = malloc(sizeof(vector));
 
-    int capacity = determine_capacity(initial_capacity);
+    unsigned int capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
 
     vector->size = 0;
     vector->capacity = capacity;
@@ -58,12 +58,18 @@ int v_pop(Vector *vector) {
 
 /*****************************/
 
-int determine_capacity(int initial_capacity) {
-    int capacity = INITIAL_CAPACITY;
-    while (initial_capacity / capacity > 0) {
-        capacity <<= 1;
-    }
-    return capacity;
+int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
+	if (value <= INITIAL_CAPACITY) {
+		return INITIAL_CAPACITY;
+	}
+	value--;
+	value |= value >> 1;  // handle  2 bit numbers
+	value |= value >> 2;  // handle  4 bit numbers
+	value |= value >> 4;  // handle  8 bit numbers
+	value |= value >> 8;  // handle 16 bit numbers
+	value |= value >> 16; // handle 32 bit numbers
+   	value++;
+	return value;	
 }
 
 void double_capacitize_vector_if_needed(Vector* vector) {
