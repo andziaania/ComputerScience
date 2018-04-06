@@ -126,13 +126,14 @@ void test_v_pop_adjusts_capacity() {
 	v_push(v, 1); v_push(v, 1);
 
 	// 10 x pop
-	v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v);
+	v_pop(v); v_pop(v); v_pop(v); v_pop(v); 
+	v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v);
 
 	assert(v_capacity(v) == 16);
 	assert(v_size(v) == 8);
 
 	v_destroy(v);
-	printf("OK -- test test_v_push_adjusts_capacity\n");
+	printf("OK -- test test_v_pop_adjusts_capacity\n");
 }
 
 

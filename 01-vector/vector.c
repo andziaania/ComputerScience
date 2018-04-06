@@ -75,10 +75,11 @@ void double_capacitize_vector_if_needed(Vector* vector) {
 }
 
 void half_capacitize_vector_if_needed(Vector *vector) {
-	if (vector->size > vector->capacity * REDUCTION_FACTOR) {
+	if (v_capacity(vector) == INITIAL_CAPACITY ||
+			vector->size > vector->capacity * REDUCTION_FACTOR) {
 		return;		
 	}
-    size_t half_capacity = vector->capacity >> 1;
+	size_t half_capacity = vector->capacity >> 1;
     re_capacitize_vector(vector, half_capacity);
 }
 
@@ -90,6 +91,3 @@ void re_capacitize_vector(Vector *vector, size_t new_capacity) {
 	vector->capacity = new_capacity;
 }
 
-void halfsize_vector() {
-	
-}
