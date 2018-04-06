@@ -1,9 +1,3 @@
-/** IMPLEMENTATION OF THE VECTOR **/
-
-int determine_capacity(int initial_capacity);
-
-void doublesize_vector(Vector *vector);
-
 
 Vector *v_init(unsigned int initial_capacity) {
     
@@ -48,15 +42,19 @@ int v_at(Vector *vector, unsigned int position) {
 }
 
 void v_push(Vector *vector, int value) {
-	if (v_capacity(vector) <= v_size(vector)) {
-		doublesize_vector(vector);
-	}
+	double_capacitize_vector_if_needed(vector);
 
-	*(vector->data + vector->size * sizeof(int)) = value;
+	*(vector->data + v_size(vector) * sizeof(int)) = value;
 	vector->size++;
 }
 
+int v_pop(Vector *vector) {
+	int popped = v_at(vector, v_size(vector) - 1);
+	vector->size--;
 
+	half_capacitize_vector_if_needed(vector);
+	return popped;
+}
 
 /*****************************/
 
@@ -68,14 +66,28 @@ int determine_capacity(int initial_capacity) {
     return capacity;
 }
 
-void doublesize_vector(Vector* vector) {
+void double_capacitize_vector_if_needed(Vector* vector) {
+	if (v_capacity(vector) > v_size(vector)) {
+		return;
+	}
 	size_t doubled_capacity = vector->capacity << 1;
-	int *doubled_data = malloc(doubled_capacity * sizeof(int));
-	memcpy(doubled_data, vector->data, v_capacity(vector));
+	re_capacitize_vector(vector, doubled_capacity);
+}
 
-	free(vector->data);
-	vector->data = doubled_data;
-	vector->capacity = doubled_capacity;
+void half_capacitize_vector_if_needed(Vector *vector) {
+	if (vector->size > vector->capacity * REDUCTION_FACTOR) {
+		return;		
+	}
+    size_t half_capacity = vector->capacity >> 1;
+    re_capacitize_vector(vector, half_capacity);
+}
+
+void re_capacitize_vector(Vector *vector, size_t new_capacity) {
+	int *resized_data = malloc(new_capacity * sizeof(int));
+	memcpy(resized_data, vector->data, v_capacity(vector));
+    free(vector->data);
+    vector->data = resized_data;
+	vector->capacity = new_capacity;
 }
 
 void halfsize_vector() {

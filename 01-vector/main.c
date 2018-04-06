@@ -60,9 +60,49 @@ void test_v_push() {
 	printf("OK -- test_v_push\n");
 }
 
+void test_v_pop() {
+	Vector *v = v_init(2);
+
+	v_push(v, 1);
+	int popped = v_pop(v);
+	assert(v_size(v) == 0);
+	assert(popped == 1);
+
+	v_push(v, 2);
+	v_push(v, 3);
+
+	int popped3 = v_pop(v);
+	int popped2 = v_pop(v);
+
+
+	assert(popped2 == 2);
+	assert(popped3 == 3);
+
+	v_destroy(v);
+	printf("OK -- test_v_pop\n");
+}
+
+void test_v_pop_empty() {
+	Vector *v = v_init(2);
+
+	//TOFO
+
+	v_destroy(v);
+	printf("OK -- test_v_\n");
+}
+
+void test_v_() {
+	Vector *v = v_init(2);
+
+
+
+	v_destroy(v);
+	printf("OK -- test_v_\n");
+}
+
+
 void test_v_push_adjusts_capacity() {
 	Vector *v = v_empty_init();
-
 
 	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
 	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
@@ -72,6 +112,24 @@ void test_v_push_adjusts_capacity() {
 	assert(v_size(v) == 18);
 	assert(v_at(v, 16) == 1);
 	assert(v_at(v, 17) == 1);
+
+	v_destroy(v);
+	printf("OK -- test test_v_push_adjusts_capacity\n");
+}
+
+void test_v_pop_adjusts_capacity() {
+	Vector *v = v_empty_init();
+
+	// 18 x push
+	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
+	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
+	v_push(v, 1); v_push(v, 1);
+
+	// 10 x pop
+	v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v);
+
+	assert(v_capacity(v) == 16);
+	assert(v_size(v) == 8);
 
 	v_destroy(v);
 	printf("OK -- test test_v_push_adjusts_capacity\n");
@@ -116,7 +174,9 @@ int main() {
 //	test_v_at();
 	test_v_push();
 	test_v_push_adjusts_capacity();
-    
+    test_v_pop();
+	test_v_pop_adjusts_capacity();
+
 	test_determine_capacity();
     return 0;
 }
