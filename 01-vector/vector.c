@@ -1,7 +1,7 @@
 
 Vector *v_init(unsigned int requested_capacity) {
     
-    Vector *vector = malloc(sizeof(vector));
+    Vector *vector = malloc(sizeof(Vector));
 
     unsigned int capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
 
@@ -38,13 +38,14 @@ int v_at(Vector *vector, unsigned int position) {
 		exit(EXIT_FAILURE);
 	}
 
-	return *(vector->data + position * sizeof(int));
+	return *(vector->data + position);
 }
 
 void v_push(Vector *vector, int value) {
 	double_capacitize_vector_if_needed(vector);
 
-	*(vector->data + v_size(vector) * sizeof(int)) = value;
+	size_t last_position = v_size(vector);
+	*(vector->data + last_position) = value;
 	vector->size++;
 }
 
@@ -58,7 +59,7 @@ int v_pop(Vector *vector) {
 
 /*****************************/
 
-int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
+unsigned int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
 	if (value <= INITIAL_CAPACITY) {
 		return INITIAL_CAPACITY;
 	}

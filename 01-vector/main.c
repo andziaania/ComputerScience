@@ -54,7 +54,7 @@ void test_v_push() {
 	assert(v_size(v) == 2);
 
 	v_push(v, 3);
-	assert(v_at(v,2) == 3);
+	assert(v_at(v, 2) == 3);
 
 	v_destroy(v);
 	printf("OK -- test_v_push\n");
@@ -139,8 +139,9 @@ void test_v_pop_adjusts_capacity() {
 
 void test_v_at() {
 	Vector *v = v_init(5);
-
-	assert(v_at(v, 11));
+	for (int i = 0; i < 16; i++) {
+	    v_push(v, i);
+	}
 
 	v_destroy(v);
 	printf("OK -- test_v_at\n");
@@ -172,13 +173,13 @@ void test_determine_capacity() {
 /**********************  MAIN  *****************/
 
 int main() {
-    test_initialization();
-    test_empty_initialization();
+	test_initialization();
+	test_empty_initialization();
 	test_v_is_empty_for_empty_initialization();
-//	test_v_at();
+	test_v_at();
 	test_v_push();
 	test_v_push_adjusts_capacity();
-    test_v_pop();
+	test_v_pop();
 	test_v_pop_adjusts_capacity();
 
 	test_determine_capacity();
