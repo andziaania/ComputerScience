@@ -57,6 +57,20 @@ int v_pop(Vector *vector) {
 	return popped;
 }
 
+void v_insert(Vector *vector, unsigned int index, int value) {
+    int initial_size = vector->size;
+    vector->size++;
+    double_capacitize_vector_if_needed(vector);
+
+    int* new_data = malloc(sizeof(int) * vector->capacity);
+    memcpy(new_data, vector->data, index * sizeof(int));
+    *(new_data + index) = value;
+    memcpy(new_data + index + 1, vector->data + index, (initial_size - index) * sizeof(int)); // TODO jak inni robia memcpy?
+
+    free(vector->data);
+    vector->data = new_data;
+}
+
 /*****************************/
 
 unsigned int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
@@ -94,7 +108,7 @@ void half_capacitize_vector_if_needed(Vector *vector) {
 
 void re_capacitize_vector(Vector *vector, size_t new_capacity) {
 	int *resized_data = malloc(new_capacity * sizeof(int));
-	memcpy(resized_data, vector->data, v_capacity(vector));
+	memcpy(resized_data, vector->data, v_size(vector) * sizeof(int));
     free(vector->data);
     vector->data = resized_data;
 	vector->capacity = new_capacity;

@@ -37,9 +37,11 @@ void v_push(Vector *vector, int value);
 
 int v_pop(Vector *vector);
 
+void v_insert(Vector *vector, unsigned int index, int value);
+
 /***** internal methods *****/
 
-int get_the_round_up_to_the_next_power_of_two(unsigned int initial_capacity);
+unsigned int get_the_round_up_to_the_next_power_of_two(unsigned int value);
 
 void double_capacitize_vector_if_needed(Vector* vector);
 

@@ -104,6 +104,7 @@ void test_v_() {
 void test_v_push_adjusts_capacity() {
 	Vector *v = v_empty_init();
 
+	// insert 18 values
 	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
 	v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1); v_push(v, 1);
 	v_push(v, 1); v_push(v, 1);
@@ -112,6 +113,9 @@ void test_v_push_adjusts_capacity() {
 	assert(v_size(v) == 18);
 	assert(v_at(v, 16) == 1);
 	assert(v_at(v, 17) == 1);
+	assert(v_at(v, 5) == 1);
+	assert(v_at(v, 15) == 1);
+	assert(v_at(v, 1) == 1);
 
 	v_destroy(v);
 	printf("OK -- test test_v_push_adjusts_capacity\n");
@@ -127,7 +131,8 @@ void test_v_pop_adjusts_capacity() {
 
 	// 10 x pop
 	v_pop(v); v_pop(v); v_pop(v); v_pop(v); 
-	v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v);
+	v_pop(v); v_pop(v); v_pop(v); v_pop(v); v_pop(v);
+	v_pop(v);
 
 	assert(v_capacity(v) == 16);
 	assert(v_size(v) == 8);
@@ -170,6 +175,28 @@ void test_determine_capacity() {
 }
 
 
+
+void test_v_insert() {
+    Vector *v = v_empty_init();
+
+    v_insert(v, 0, 10);
+    assert(v_at(v, 0) == 10);
+
+    v_push(v, 11);
+    v_insert(v, 0, 12);
+    v_insert(v, 2, 13);
+    assert(v_at(v, 0) == 12);
+    assert(v_at(v, 2) == 13);
+
+    v_insert(v, 2, 14);
+    assert(v_at(v, 2) == 14);
+    assert(v_at(v, 3) == 13);
+
+    v_destroy(v);
+
+	printf("OK -- test_v_insert\n");
+}
+
 /**********************  MAIN  *****************/
 
 int main() {
@@ -181,6 +208,7 @@ int main() {
 	test_v_push_adjusts_capacity();
 	test_v_pop();
 	test_v_pop_adjusts_capacity();
+	test_v_insert();
 
 	test_determine_capacity();
     return 0;
