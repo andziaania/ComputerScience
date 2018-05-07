@@ -13,8 +13,8 @@ const float REDUCTION_FACTOR = 0.25;
 
 typedef struct Vector {
     int *data;
-    int size;
-    int capacity;
+    size_t size;
+    size_t capacity;
 } Vector;
 
 
@@ -35,6 +35,11 @@ int v_at(Vector *vector, unsigned int position);
 
 void v_push(Vector *vector, int value);
 
+/**
+ * When popping an item, if size is 1/4 of capacity, resize to half
+ * @param vector
+ * @return
+ */
 int v_pop(Vector *vector);
 
 void v_insert(Vector *vector, unsigned int index, int value);

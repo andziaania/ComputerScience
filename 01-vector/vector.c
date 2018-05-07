@@ -34,7 +34,7 @@ bool v_is_empty(Vector *vector) {
 
 int v_at(Vector *vector, unsigned int position) {
 	if (position >= v_size(vector)) {
-		fprintf(stderr, "v_at: Position %u out of bounds. The size of the vector is %zu.\n\n", position, v_size(vector));
+		fprintf(stderr, "v_at: Position %u out of bounds. The size of the vector is %u.\n\n", position, v_size(vector));
 		exit(EXIT_FAILURE);
 	}
 
@@ -62,13 +62,22 @@ void v_insert(Vector *vector, unsigned int index, int value) {
     vector->size++;
     double_capacitize_vector_if_needed(vector);
 
-    int* new_data = malloc(sizeof(int) * vector->capacity);
-    memcpy(new_data, vector->data, index * sizeof(int));
-    *(new_data + index) = value;
-    memcpy(new_data + index + 1, vector->data + index, (initial_size - index) * sizeof(int)); // TODO jak inni robia memcpy?
+    memmove(vector->data + index + 1, vector->data + index, (initial_size - index) * sizeof(int));
+    *(vector->data + index) = value;
+}
 
-    free(vector->data);
-    vector->data = new_data;
+void v_prepend(Vector *vector, int value) {
+    v_insert(vector, 0, value);
+}
+
+void v_delete(Vector *vector, unsigned int index) {
+    if (v_size(vector) == 0 || index >= v_size(vector)) {
+        return;
+    }
+
+    memmove(vector->data + index, vector->data + index + 1, (v_size(vector) - index - 1) * sizeof(int));
+    vector->size--;
+    //half_capacitize_vector_if_needed();
 }
 
 /*****************************/
@@ -97,6 +106,9 @@ void double_capacitize_vector_if_needed(Vector* vector) {
 	re_capacitize_vector(vector, doubled_capacity);
 }
 
+/**
+ * When popping an item, if size is 1/4 of capacity, resize to half
+ */
 void half_capacitize_vector_if_needed(Vector *vector) {
 	if (v_capacity(vector) == INITIAL_CAPACITY ||
 			vector->size > vector->capacity * REDUCTION_FACTOR) {
