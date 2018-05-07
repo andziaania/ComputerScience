@@ -146,8 +146,11 @@ void test_v_delete_with_capacity_change() {
     assert(v_size(v) == 17);
     assert(v_capacity(v) == 32);
 
+    // squize to 1/4 capacity == 8
     v_delete(v, 0);
-    assert(v_size(v) == 16);
+	v_delete(v, 0); v_delete(v, 0); v_delete(v, 0); v_delete(v, 0);
+	v_delete(v, 0); v_delete(v, 0); v_delete(v, 0); v_delete(v, 0);
+    assert(v_size(v) == 8);
     assert(v_capacity(v) == 16);
 
     v_destroy(v);

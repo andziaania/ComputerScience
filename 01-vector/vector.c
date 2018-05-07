@@ -34,7 +34,7 @@ bool v_is_empty(Vector *vector) {
 
 int v_at(Vector *vector, unsigned int position) {
 	if (position >= v_size(vector)) {
-		fprintf(stderr, "v_at: Position %u out of bounds. The size of the vector is %u.\n\n", position, v_size(vector));
+		fprintf(stderr, "v_at: Position %u out of bounds. The size of the vector is %zu.\n\n", position, v_size(vector));
 		exit(EXIT_FAILURE);
 	}
 
@@ -77,7 +77,7 @@ void v_delete(Vector *vector, unsigned int index) {
 
     memmove(vector->data + index, vector->data + index + 1, (v_size(vector) - index - 1) * sizeof(int));
     vector->size--;
-    //half_capacitize_vector_if_needed();
+    half_capacitize_vector_if_needed(vector);
 }
 
 /*****************************/
