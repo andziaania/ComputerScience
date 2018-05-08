@@ -19,7 +19,7 @@ typedef struct Vector {
 
 
 
-Vector *v_init(unsigned int initial_capacity);
+Vector *v_init(size_t initial_capacity);
 
 Vector *v_empty_init();
 
@@ -31,7 +31,7 @@ size_t v_capacity(Vector *vector);
 
 bool v_is_empty(Vector *vector);
 
-int v_at(Vector *vector, unsigned int position);
+int v_at(Vector *vector, size_t position);
 
 void v_push(Vector *vector, int value);
 
@@ -42,16 +42,26 @@ void v_push(Vector *vector, int value);
  */
 int v_pop(Vector *vector);
 
-void v_insert(Vector *vector, unsigned int index, int value);
+void v_insert(Vector *vector, size_t index, int value);
+
+void v_prepend(Vector *vector, int value);
+
+void v_delete(Vector *vector, size_t index);
+
+int v_find(Vector *v, int item);
+
+void v_remove(Vector *v, int item);
 
 /***** internal methods *****/
 
-unsigned int get_the_round_up_to_the_next_power_of_two(unsigned int value);
+size_t get_the_round_up_to_the_next_power_of_two(size_t value);
 
 void double_capacitize_vector_if_needed(Vector* vector);
 
 void half_capacitize_vector_if_needed(Vector *vector);
 
 void re_capacitize_vector(Vector *vector, size_t new_capacity);
+
+void setAt(Vector *vector, size_t index, int value);
 
 #endif

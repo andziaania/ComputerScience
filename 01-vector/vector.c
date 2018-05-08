@@ -1,9 +1,9 @@
 
-Vector *v_init(unsigned int requested_capacity) {
+Vector *v_init(size_t requested_capacity) {
     
     Vector *vector = malloc(sizeof(Vector));
 
-    unsigned int capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
+    size_t capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
 
     vector->size = 0;
     vector->capacity = capacity;
@@ -32,9 +32,9 @@ bool v_is_empty(Vector *vector) {
 	return v_size(vector) == 0;
 }
 
-int v_at(Vector *vector, unsigned int position) {
+int v_at(Vector *vector, size_t position) {
 	if (position >= v_size(vector)) {
-		fprintf(stderr, "v_at: Position %u out of bounds. The size of the vector is %zu.\n\n", position, v_size(vector));
+		fprintf(stderr, "v_at: Position %zu out of bounds. The size of the vector is %zu.\n\n", position, v_size(vector));
 		exit(EXIT_FAILURE);
 	}
 
@@ -45,7 +45,7 @@ void v_push(Vector *vector, int value) {
 	double_capacitize_vector_if_needed(vector);
 
 	size_t last_position = v_size(vector);
-	*(vector->data + last_position) = value;
+	setAt(vector, last_position, value);
 	vector->size++;
 }
 
@@ -57,20 +57,20 @@ int v_pop(Vector *vector) {
 	return popped;
 }
 
-void v_insert(Vector *vector, unsigned int index, int value) {
+void v_insert(Vector *vector, size_t index, int value) {
     int initial_size = vector->size;
     vector->size++;
     double_capacitize_vector_if_needed(vector);
 
     memmove(vector->data + index + 1, vector->data + index, (initial_size - index) * sizeof(int));
-    *(vector->data + index) = value;
+    setAt(vector, index, value);
 }
 
 void v_prepend(Vector *vector, int value) {
     v_insert(vector, 0, value);
 }
 
-void v_delete(Vector *vector, unsigned int index) {
+void v_delete(Vector *vector, size_t index) {
     if (v_size(vector) == 0 || index >= v_size(vector)) {
         return;
     }
@@ -80,9 +80,42 @@ void v_delete(Vector *vector, unsigned int index) {
     half_capacitize_vector_if_needed(vector);
 }
 
+int v_find(Vector *vector, int item) {
+    for (size_t i = 0; i < v_size(vector); i++) {
+        if (v_at(vector, i) == item) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void v_remove(Vector *vector, int item) {
+    if (v_size(vector) == 0) {
+        return;
+    }
+
+    size_t searchedItemIndex = 0;
+    size_t insertionItemIndex = 0;
+
+    for (; searchedItemIndex < v_size(vector); searchedItemIndex++, insertionItemIndex++) {
+        while (searchedItemIndex < v_size(vector) && v_at(vector, searchedItemIndex) == item) {
+            searchedItemIndex++;
+        }
+
+        if (searchedItemIndex == v_size(vector)) {
+            // We finished scanning. We will not include the item under searchedItemIndex.
+            break;
+        }
+        setAt(vector, insertionItemIndex, v_at(vector, searchedItemIndex));
+    }
+    vector->size = insertionItemIndex;
+    half_capacitize_vector_if_needed(vector);
+}
+
+
 /*****************************/
 
-unsigned int get_the_round_up_to_the_next_power_of_two(unsigned int value) {
+size_t get_the_round_up_to_the_next_power_of_two(size_t value) {
 	if (value <= INITIAL_CAPACITY) {
 		return INITIAL_CAPACITY;
 	}
@@ -124,5 +157,9 @@ void re_capacitize_vector(Vector *vector, size_t new_capacity) {
     free(vector->data);
     vector->data = resized_data;
 	vector->capacity = new_capacity;
+}
+
+void setAt(Vector *vector, size_t index, int value) {
+    *(vector->data + index) = value;
 }
 

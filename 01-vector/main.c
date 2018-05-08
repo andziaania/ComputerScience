@@ -60,6 +60,27 @@ void test_v_push() {
 	printf("OK -- test_v_push\n");
 }
 
+void test_v_insert() {
+    Vector *v = v_empty_init();
+
+    v_insert(v, 0, 10);
+    assert(v_at(v, 0) == 10);
+
+    v_push(v, 11);
+    v_insert(v, 0, 12);
+    v_insert(v, 2, 13);
+    assert(v_at(v, 0) == 12);
+    assert(v_at(v, 2) == 13);
+
+    v_insert(v, 2, 14);
+    assert(v_at(v, 2) == 14);
+    assert(v_at(v, 3) == 13);
+
+    v_destroy(v);
+
+    printf("OK -- test_v_insert\n");
+}
+
 void test_v_pop() {
 	Vector *v = v_init(2);
 
@@ -160,21 +181,11 @@ void test_v_delete_with_capacity_change() {
 void test_v_pop_empty() {
 	Vector *v = v_init(2);
 
-	//TOFO
+	//TODO
 
 	v_destroy(v);
 	printf("OK -- test_v_\n");
 }
-
-void test_v_() {
-	Vector *v = v_init(2);
-
-
-
-	v_destroy(v);
-	printf("OK -- test_v_\n");
-}
-
 
 void test_v_push_adjusts_capacity() {
 	Vector *v = v_empty_init();
@@ -256,29 +267,103 @@ void test_determine_capacity() {
     printf("OK -- test_determine_capacity\n");
 }
 
+void test_v_find() {
+    Vector *v = v_init(2);
 
+	// find in empty vector
+	assert(v_find(v, 32) == -1);
 
-void test_v_insert() {
-    Vector *v = v_empty_init();
+	v_push(v, 11);
+	assert(v_find(v, 32) == -1);
+	assert(v_find(v, 11) == 0);
 
-    v_insert(v, 0, 10);
-    assert(v_at(v, 0) == 10);
+	v_push(v, 22);
+	v_push(v, 33);
+	v_push(v, 44);
+	assert(v_find(v, 22) == 1);
+	assert(v_find(v, 33) == 2);
+	assert(v_find(v, 44) == 3);
 
-    v_push(v, 11);
-    v_insert(v, 0, 12);
-    v_insert(v, 2, 13);
-    assert(v_at(v, 0) == 12);
-    assert(v_at(v, 2) == 13);
+	v_push(v, 44);
+	v_push(v, 33);
+	v_push(v, 33);
+	v_push(v, 44);
+	v_push(v, 33);
+	assert(v_find(v, 33) == 2);
+	assert(v_find(v, 44) == 3);
 
-    v_insert(v, 2, 14);
-    assert(v_at(v, 2) == 14);
-    assert(v_at(v, 3) == 13);
-
-    v_destroy(v);
-
-	printf("OK -- test_v_insert\n");
+	v_destroy(v);
+    printf("OK -- test_v_find\n");
 }
 
+
+void test_v_remove_emptyVectorOrOneSized() {
+	Vector *v = v_init(2);
+
+	// Remove from an empty vector - do nothing
+	v_remove(v, 56);
+	assert(v_size(v) == 0);
+
+	v_push(v, 55);
+	v_remove(v, 56);
+	assert(v_size(v) == 1);
+	assert(v_at(v, 0) == 55);
+	v_remove(v, 55);
+	assert(v_size(v) == 0);
+
+	v_destroy(v);
+	printf("OK -- test_v_remove_emptyVectorOrOneSized\n");
+}
+
+void test_v_remove() {
+	Vector *v = v_init(2);
+
+	// Insert 18 elements. The capacity is increased to 32.
+	v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15);
+	v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15); v_push(v, 15);
+	v_push(v, 15); v_push(v, 15);
+	v_remove(v, 15);
+	assert(v_size(v) == 0);
+	assert(v_capacity(v) == 16);
+
+	v_push(v, 11);
+	v_push(v, 22);
+	v_push(v, 33);
+	v_remove(v, 22);
+	assert(v_find(v, 22) == -1);
+	assert(v_find(v, 11) == 0);
+	assert(v_find(v, 33) == 1);
+	assert(v_size(v) == 2);
+
+	v_push(v, 44);
+	v_push(v, 33);
+	v_push(v, 33);
+	v_push(v, 44);
+	v_push(v, 33);
+	v_remove(v, 33);
+	assert(v_find(v, 33) == -1);
+	assert(v_size(v) == 3);
+	assert(v_find(v, 44) == 1);
+
+	v_remove(v, 11);
+	assert(v_find(v, 11) == -1);
+	assert(v_at(v, 0) == 44);
+
+	v_remove(v, 44);
+	assert(v_size(v) == 0);
+
+    v_destroy(v);
+    printf("OK -- test_v_remove\n");
+}
+
+void test_v_() {
+    Vector *v = v_init(2);
+
+
+
+    v_destroy(v);
+    printf("OK -- test_v_\n");
+}
 /**********************  MAIN  *****************/
 
 int main() {
@@ -294,6 +379,9 @@ int main() {
     test_v_prepend();
     test_v_delete();
     test_v_delete_with_capacity_change();
+    test_v_find();
+	test_v_remove_emptyVectorOrOneSized();
+    test_v_remove();
 
 	test_determine_capacity();
     return 0;
