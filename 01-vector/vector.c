@@ -2,13 +2,15 @@
 Vector *v_init(size_t requested_capacity) {
     
     Vector *vector = malloc(sizeof(Vector));
+    checkAllocationSuccess(vector);
 
     size_t capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
 
     vector->size = 0;
     vector->capacity = capacity;
     vector->data = malloc(sizeof(int) * capacity);
-
+    checkAllocationSuccess(vector->data);
+    return vector;
 }
 
 Vector *v_empty_init() {
@@ -32,13 +34,9 @@ bool v_is_empty(Vector *vector) {
 	return v_size(vector) == 0;
 }
 
-int v_at(Vector *vector, size_t position) {
-	if (position >= v_size(vector)) {
-		fprintf(stderr, "v_at: Position %zu out of bounds. The size of the vector is %zu.\n\n", position, v_size(vector));
-		exit(EXIT_FAILURE);
-	}
-
-	return *(vector->data + position);
+int v_at(Vector *vector, size_t index) {
+    assertIndexInBounds(vector, index, false);
+	return *(vector->data + index);
 }
 
 void v_push(Vector *vector, int value) {
@@ -58,6 +56,8 @@ int v_pop(Vector *vector) {
 }
 
 void v_insert(Vector *vector, size_t index, int value) {
+    assertIndexInBounds(vector, index, true);
+
     int initial_size = vector->size;
     vector->size++;
     double_capacitize_vector_if_needed(vector);
@@ -152,14 +152,28 @@ void half_capacitize_vector_if_needed(Vector *vector) {
 }
 
 void re_capacitize_vector(Vector *vector, size_t new_capacity) {
-	int *resized_data = malloc(new_capacity * sizeof(int));
-	memcpy(resized_data, vector->data, v_size(vector) * sizeof(int));
-    free(vector->data);
-    vector->data = resized_data;
+    // TODO: Why can't I assign immediately to vector->data? https://stackoverflow.com/questions/35190326/warning-ignoring-return-value-of-realloc-declared-with-attribute-warn-unused/35190369
+    int *reallocatedData = (int *) realloc(vector->data, new_capacity * sizeof(int));
+    checkAllocationSuccess(reallocatedData);
+    vector->data = reallocatedData;
 	vector->capacity = new_capacity;
 }
 
 void setAt(Vector *vector, size_t index, int value) {
     *(vector->data + index) = value;
+}
+
+void checkAllocationSuccess(void *ptr) {
+    if (ptr == NULL) {
+        printf("Ups... Memory allocation error. Bye Bye!");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void assertIndexInBounds(Vector *vector, size_t index, bool allowEqualToSize) {
+    if (index >= v_size(vector) + (int) allowEqualToSize || index < 0) {
+        fprintf(stderr, "v_at: Position %zu out of bounds. The size of the vector is %zu.\n\n", index, v_size(vector));
+        exit(EXIT_FAILURE);
+    }
 }
 
