@@ -2,19 +2,19 @@
 Vector *v_init(size_t requested_capacity) {
     
     Vector *vector = malloc(sizeof(Vector));
-    checkAllocationSuccess(vector);
+    check_allocation_success(vector);
 
     size_t capacity = get_the_round_up_to_the_next_power_of_two(requested_capacity);
 
     vector->size = 0;
     vector->capacity = capacity;
     vector->data = malloc(sizeof(int) * capacity);
-    checkAllocationSuccess(vector->data);
+    check_allocation_success(vector->data);
     return vector;
 }
 
 Vector *v_empty_init() {
-	return v_init(0);
+	return v_init(16);
 }
 
 void v_destroy(Vector *vector) {
@@ -35,7 +35,7 @@ bool v_is_empty(Vector *vector) {
 }
 
 int v_at(Vector *vector, size_t index) {
-    assertIndexInBounds(vector, index, false);
+    assert_index_in_bounds(vector, index, false);
 	return *(vector->data + index);
 }
 
@@ -43,7 +43,7 @@ void v_push(Vector *vector, int value) {
 	double_capacitize_vector_if_needed(vector);
 
 	size_t last_position = v_size(vector);
-	setAt(vector, last_position, value);
+	set_at(vector, last_position, value);
 	vector->size++;
 }
 
@@ -56,14 +56,14 @@ int v_pop(Vector *vector) {
 }
 
 void v_insert(Vector *vector, size_t index, int value) {
-    assertIndexInBounds(vector, index, true);
+    assert_index_in_bounds(vector, index, true);
 
     int initial_size = vector->size;
     vector->size++;
     double_capacitize_vector_if_needed(vector);
 
     memmove(vector->data + index + 1, vector->data + index, (initial_size - index) * sizeof(int));
-    setAt(vector, index, value);
+    set_at(vector, index, value);
 }
 
 void v_prepend(Vector *vector, int value) {
@@ -106,7 +106,7 @@ void v_remove(Vector *vector, int item) {
             // We finished scanning. We will not include the item under searchedItemIndex.
             break;
         }
-        setAt(vector, insertionItemIndex, v_at(vector, searchedItemIndex));
+        set_at(vector, insertionItemIndex, v_at(vector, searchedItemIndex));
     }
     vector->size = insertionItemIndex;
     half_capacitize_vector_if_needed(vector);
@@ -154,23 +154,23 @@ void half_capacitize_vector_if_needed(Vector *vector) {
 void re_capacitize_vector(Vector *vector, size_t new_capacity) {
     // TODO: Why can't I assign immediately to vector->data? https://stackoverflow.com/questions/35190326/warning-ignoring-return-value-of-realloc-declared-with-attribute-warn-unused/35190369
     int *reallocatedData = (int *) realloc(vector->data, new_capacity * sizeof(int));
-    checkAllocationSuccess(reallocatedData);
+    check_allocation_success(reallocatedData);
     vector->data = reallocatedData;
 	vector->capacity = new_capacity;
 }
 
-void setAt(Vector *vector, size_t index, int value) {
+void set_at(Vector *vector, size_t index, int value) {
     *(vector->data + index) = value;
 }
 
-void checkAllocationSuccess(void *ptr) {
+void check_allocation_success(void *ptr) {
     if (ptr == NULL) {
         printf("Ups... Memory allocation error. Bye Bye!");
         exit(EXIT_FAILURE);
     }
 }
 
-void assertIndexInBounds(Vector *vector, size_t index, bool allowEqualToSize) {
+void assert_index_in_bounds(Vector *vector, size_t index, bool allowEqualToSize) {
     if (index >= v_size(vector) + (int) allowEqualToSize || index < 0) {
         fprintf(stderr, "v_at: Position %zu out of bounds. The size of the vector is %zu.\n\n", index, v_size(vector));
         exit(EXIT_FAILURE);

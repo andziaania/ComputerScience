@@ -62,10 +62,10 @@ void half_capacitize_vector_if_needed(Vector *vector);
 
 void re_capacitize_vector(Vector *vector, size_t new_capacity);
 
-void setAt(Vector *vector, size_t index, int value);
+void set_at(Vector *vector, size_t index, int value);
 
-void checkAllocationSuccess(void *ptr);
+void check_allocation_success(void *ptr);
 
-void assertIndexInBounds(Vector *vector, size_t index, bool allowEqualToSize);
+void assert_index_in_bounds(Vector *vector, size_t index, bool allowEqualToSize);
 
 #endif
