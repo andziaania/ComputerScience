@@ -201,12 +201,29 @@ void test_v_pop_empty() {
 }
 
 void test_v_push_adjusts_capacity() {
-    Vector v;
+//    Vector v(2);
+//
+//    v.push(5);
+//    assert(v.at(0) == 5);
+//    assert(v.getSize() == 1);
+//
+//    v.push(4);
+//    assert(v.at(0) == 5);
+//    assert(v.at(1) == 4);
+//    assert(v.getSize() == 2);
+//
+//    v.push(3);
+//    assert(v.at(2) == 3);
+//
+//    printf("OK -- test_v_push\n");
+
+    Vector v(2);
 
     // insert 18 values
     v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1);
-    v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1);
-    v.push(1); v.push(1);
+    v.push(1); v.push(1); v.push(1); v.push(1);
+    v.push(1); v.push(1); v.push(1); v.push(1);
+//    v.push(1); v.push(1);
 
     assert(v.getCapacity() == 32);
     assert(v.getSize() == 18);
@@ -361,11 +378,13 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
 
     test_initialization();
-//    test_empty_initialization();
-//    test_v_is_empty_for_empty_initialization();
-//    test_v_at();
-//    test_v_push();
-//    test_v_push_adjusts_capacity();
+    test_empty_initialization();
+    test_v_is_empty_for_empty_initialization();
+    test_v_at();
+    test_v_push();
+
+    test_v_push_adjusts_capacity();
+    std::cout << "Hello, World!" << std::endl;
 //    test_v_pop();
 //    test_v_pop_adjusts_capacity();
 //    test_v_insert();

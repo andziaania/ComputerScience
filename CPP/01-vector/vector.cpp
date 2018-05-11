@@ -2,52 +2,144 @@
 // Created by AnnA on 11.05.2018.
 //
 
+#include <iostream>
 #include "vector.h"
 
-Vector::Vector() {}
+// IMPORTANT: this works cause the call to other constructor is on the initialization list.
+// It would go into an unfinitive initialization loop if the call to the parametrized constructor
+// would be it the code.
+Vector::Vector() : Vector(INITIAL_CAPACITY) {}
 
-Vector::Vector(std::size_t initialCapacity) {}
+Vector::Vector(size_t initialCapacity) {
+    capacity = getTheRoundUpToTheNextPoweroOfTwo(initialCapacity);
+    size = 0;
+    data = new int[capacity];
+}
 
-Vector::~Vector() {}
+Vector::~Vector() {
+    delete[] data;
+}
 
-std::size_t Vector::getSize() {}
+size_t Vector::getSize() {
+    return size;
+}
 
-std::size_t Vector::getCapacity() {}
+size_t Vector::getCapacity() {
+    return capacity;
+}
 
-bool Vector::isEmpty() {}
+bool Vector::isEmpty() {
+    return getSize() == 0;
+}
 
-int Vector::at(std::size_t index) {}
+int Vector::at(size_t index) {
+    assertIndexInBounds(index, false);
+    return *(data + index);
+}
 
-void Vector::push(int value) {}
+void Vector::push(int value) {
+    doubleCapacitizeVectorIfNeeded();
+
+    size_t lastPosition = getSize();
+    setAt(lastPosition, value);
+    size++;
+}
+
 /**
  * When popping an item, if size is 1/4 of capacity, resize to half
  * @param vector
  * @return
  */
-int Vector::pop() {}
+int Vector::pop() {
+    int popped = at(getSize() - 1);
+    size--;
 
-void Vector::insert(std::size_t index, int value) {}
+    halfCapacitizeVectorIfNeeded();
+    return popped;
+}
 
-void Vector::prepend(int value) {}
+void Vector::insert(size_t index, int value) {
+    assertIndexInBounds(index, true);
 
-void Vector::deleteItem(std::size_t index) {}
+    int initialSize = size;
+    size++;
+    doubleCapacitizeVectorIfNeeded();
+
+    memmove(data + index + 1, data + index, (initialSize - index) * sizeof(int));
+    setAt(index, value);
+}
+
+void Vector::prepend(int value) {
+    insert(0 ,value);
+}
+
+void Vector::deleteItem(size_t index) {
+    if (getSize() == 0 || index >= getSize()) {
+        return;
+    }
+
+    memmove(data + index, data + index + 1, (getSize() - index - 1) * sizeof(int));
+    size--;
+    halfCapacitizeVectorIfNeeded();
+}
 
 int Vector::find(int item) {}
 
 void Vector::remove(int item) {}
 
 
-std::size_t Vector::getTheRoundUpToTheNextPoweroOfTwo(std::size_t value) {}
+size_t Vector::getTheRoundUpToTheNextPoweroOfTwo(size_t value) {
+    if (value <= INITIAL_CAPACITY) {
+        return INITIAL_CAPACITY;
+    }
+    value--;
+    value |= value >> 1;  // handle  2 bit numbers
+    value |= value >> 2;  // handle  4 bit numbers
+    value |= value >> 4;  // handle  8 bit numbers
+    value |= value >> 8;  // handle 16 bit numbers
+    if (sizeof(value) > 2) {
+        value |= value >> 16; // handle 32 bit numbers
+    }
+    value++;
+    return value;
+}
 
-void Vector::doubleCapacitizeVectorIfNeeded() {}
+void Vector::doubleCapacitizeVectorIfNeeded() {
+    if (getCapacity() > getSize()) {
+        return;
+    }
+    size_t doubledCapacity = capacity << 1;
+    reCapacitizeVector(doubledCapacity);
+}
 
-void Vector::halfCapacitizeVectorIfNeeded() {}
+void Vector::halfCapacitizeVectorIfNeeded() {
+    if (getCapacity() == INITIAL_CAPACITY ||
+        getSize() > getCapacity() * REDUCTION_FACTOR) {
+        return;
+    }
+    size_t halfCapacity = capacity >> 1;
+    reCapacitizeVector(halfCapacity);
+    *(data + 2) = 2;
+}
 
-void Vector::reCapacitizeVector(std::size_t new_capacity) {}
+void Vector::reCapacitizeVector(size_t newCapacity) {
+    int *reallocatedData = new int[newCapacity];
+    std::memcpy(reallocatedData, data, sizeof(int) * newCapacity);
 
-void Vector::setAt(Vector *vector, std::size_t index, int value) {}
+    delete[] data;
+    data = reallocatedData;
+    capacity = newCapacity;
+}
 
-void Vector::checkAllocationSuccess(void *ptr) {}
+void Vector::setAt(size_t index, int value) {
+    capacity = 3;
+    *(data + index) = value;
+}
 
-void Vector::assertIndexInBounds(Vector *vector, std::size_t index, bool allowEqualToSize) {}
+void Vector::assertIndexInBounds(size_t index, bool allowEqualToSize) {
+    if (index >= getSize() + (int) allowEqualToSize || index < 0) {
+        std::cerr << "Position " << index << " out of bounds. The size of the vector is " << getSize() << ".\n\n";
+//        throw new Exception();
+    }
+}
 

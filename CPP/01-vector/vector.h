@@ -5,12 +5,17 @@
 #pragma once
 
 #include <cstdint>
-
+#include <cstring>
+#include <cstdio>
 
 class Vector {
 private:
     const int INITIAL_CAPACITY = 16;
     const float REDUCTION_FACTOR = 0.25;
+protected:
+    size_t size;
+    size_t capacity;
+    int *data;
 
 public:
     Vector();
@@ -52,9 +57,7 @@ protected:
 
     void reCapacitizeVector(std::size_t new_capacity);
 
-    void setAt(Vector *vector, std::size_t index, int value);
+    void setAt(std::size_t index, int value);
 
-    void checkAllocationSuccess(void *ptr);
-
-    void assertIndexInBounds(Vector *vector, std::size_t index, bool allowEqualToSize);
+    void assertIndexInBounds(std::size_t index, bool allowEqualToSize);
 };
