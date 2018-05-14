@@ -223,7 +223,7 @@ void test_v_push_adjusts_capacity() {
     v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1);
     v.push(1); v.push(1); v.push(1); v.push(1);
     v.push(1); v.push(1); v.push(1); v.push(1);
-//    v.push(1); v.push(1);
+    v.push(1); v.push(1);
 
     assert(v.getCapacity() == 32);
     assert(v.getSize() == 18);
@@ -385,15 +385,15 @@ int main() {
 
     test_v_push_adjusts_capacity();
     std::cout << "Hello, World!" << std::endl;
-//    test_v_pop();
-//    test_v_pop_adjusts_capacity();
-//    test_v_insert();
-//    test_v_prepend();
-//    test_v_delete();
-//    test_v_delete_with_capacity_change();
-//    test_v_find();
-//    test_v_remove_emptyVectorOrOneSized();
-//    test_v_remove();
+    test_v_pop();
+    test_v_pop_adjusts_capacity();
+    test_v_insert();
+    test_v_prepend();
+    test_v_delete();
+    test_v_delete_with_capacity_change();
+    test_v_find();
+    test_v_remove_emptyVectorOrOneSized();
+    test_v_remove();
 
     return 0;
 }

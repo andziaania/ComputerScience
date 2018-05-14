@@ -83,9 +83,37 @@ void Vector::deleteItem(size_t index) {
     halfCapacitizeVectorIfNeeded();
 }
 
-int Vector::find(int item) {}
+int Vector::find(int item) {
+    for (size_t i = 0; i < getSize(); i++) {
+        if (at(i) == item) {
+            return i;
+        }
+    }
+    return -1;
+}
 
-void Vector::remove(int item) {}
+void Vector::remove(int item) {
+    if (getSize() == 0) {
+        return;
+    }
+
+    size_t searchedItemIndex = 0;
+    size_t insertionItemIndex = 0;
+
+    for (; searchedItemIndex < getSize(); searchedItemIndex++, insertionItemIndex++) {
+        while (searchedItemIndex < getSize() && at(searchedItemIndex) == item) {
+            searchedItemIndex++;
+        }
+
+        if (searchedItemIndex == getSize()) {
+            // We finished scanning. We will not include the item under searchedItemIndex.
+            break;
+        }
+        setAt(insertionItemIndex, at(searchedItemIndex));
+    }
+    size = insertionItemIndex;
+    halfCapacitizeVectorIfNeeded();
+}
 
 
 size_t Vector::getTheRoundUpToTheNextPoweroOfTwo(size_t value) {
@@ -132,7 +160,6 @@ void Vector::reCapacitizeVector(size_t newCapacity) {
 }
 
 void Vector::setAt(size_t index, int value) {
-    capacity = 3;
     *(data + index) = value;
 }
 
