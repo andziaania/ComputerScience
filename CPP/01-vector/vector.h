@@ -4,14 +4,21 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cstring>
-#include <cstdio>
+#include <exception>
+#include <string>
 
 class Vector {
-private:
-    const int INITIAL_CAPACITY = 16;
+public:
+    const size_t INITIAL_CAPACITY = 16;
     const float REDUCTION_FACTOR = 0.25;
+
+    class IndexOutOfBoundException : std::exception {
+    public:
+        explicit IndexOutOfBoundException(const std::string &msg) {}
+
+        const char *what() const noexcept override;
+    };
+
 protected:
     size_t size;
     size_t capacity;
@@ -19,7 +26,7 @@ protected:
 
 public:
     Vector();
-    Vector(std::size_t initialCapacity);
+    explicit Vector(std::size_t initialCapacity);
     ~Vector();
 
     std::size_t getSize();
@@ -49,7 +56,7 @@ public:
     void remove(int item);
 
 protected:
-    std::size_t getTheRoundUpToTheNextPoweroOfTwo(std::size_t value);
+    std::size_t getTheRoundUpToTheNextPowerOfTwo(std::size_t value);
 
     void doubleCapacitizeVectorIfNeeded();
 

@@ -3,7 +3,12 @@
 //
 
 #include <iostream>
+#include <cstdint>
+#include <cstring>
+#include <cstdio>
+
 #include "vector.h"
+
 
 // IMPORTANT: this works cause the call to other constructor is on the initialization list.
 // It would go into an unfinitive initialization loop if the call to the parametrized constructor
@@ -11,7 +16,7 @@
 Vector::Vector() : Vector(INITIAL_CAPACITY) {}
 
 Vector::Vector(size_t initialCapacity) {
-    capacity = getTheRoundUpToTheNextPoweroOfTwo(initialCapacity);
+    capacity = getTheRoundUpToTheNextPowerOfTwo(initialCapacity);
     size = 0;
     data = new int[capacity];
 }
@@ -116,7 +121,7 @@ void Vector::remove(int item) {
 }
 
 
-size_t Vector::getTheRoundUpToTheNextPoweroOfTwo(size_t value) {
+size_t Vector::getTheRoundUpToTheNextPowerOfTwo(size_t value) {
     if (value <= INITIAL_CAPACITY) {
         return INITIAL_CAPACITY;
     }
@@ -151,7 +156,7 @@ void Vector::halfCapacitizeVectorIfNeeded() {
 }
 
 void Vector::reCapacitizeVector(size_t newCapacity) {
-    int *reallocatedData = new int[newCapacity];
+    auto *reallocatedData = new int[newCapacity];
     std::memcpy(reallocatedData, data, sizeof(int) * newCapacity);
 
     delete[] data;
@@ -166,7 +171,11 @@ void Vector::setAt(size_t index, int value) {
 void Vector::assertIndexInBounds(size_t index, bool allowEqualToSize) {
     if (index >= getSize() + (int) allowEqualToSize || index < 0) {
         std::cerr << "Position " << index << " out of bounds. The size of the vector is " << getSize() << ".\n\n";
-//        throw new Exception();
+        throw IndexOutOfBoundException("Position " + std::to_string(index)
+                                       + " out of bounds. The size of the vector is " + std::to_string(getSize()) + ".\n\n");
     }
 }
 
+const char *Vector::IndexOutOfBoundException::what() const {
+    return "IndexOutOfBoundException";
+}

@@ -2,7 +2,8 @@
 // Created by AnnA on 11.05.2018.
 //
 #include <iostream>
-#include <assert.h>
+#include <cassert>
+#include <cmath>
 
 #include "vector.h"
 
@@ -10,8 +11,6 @@
  * Implement a vector - mutable array with automatic resizing
  *
  * */
-
-//TODO exceptions
 
 void test_initialization() {
 
@@ -29,11 +28,12 @@ void test_initialization() {
     Vector v2(32);
     assert(v2.getCapacity() == 32);
 
-    Vector v3(2^9 - 3);
-    assert(v.getCapacity() == 2^9);
+    Vector v3((size_t) pow(2, 9) - 3);
+    assert(v.getCapacity() == pow(2, 9));
 
-    Vector v4(2^9);
-    assert(v.getCapacity() == 2^9);
+    Vector v4((size_t) pow(2, 9));
+    assert(v.getCapacity() == pow(2, 9));
+
 
     printf("OK -- test_initialization\n");
 }
@@ -44,6 +44,7 @@ void test_empty_initialization() {
     assert(v.getSize() == 0);
     assert(v.getCapacity() == 16);
 
+
     printf("OK -- test_empty_initialization\n");
 }
 
@@ -53,6 +54,7 @@ void test_v_is_empty_for_empty_initialization() {
 
     assert(v.isEmpty());
     assert(vWithInitialCapacity.isEmpty());
+
 
     printf("OK -- test_v_is_empty_for_empty_initialization\n");
 }
@@ -72,7 +74,29 @@ void test_v_push() {
     v.push(3);
     assert(v.at(2) == 3);
 
+
     printf("OK -- test_v_push\n");
+}
+
+void test_v_push_adjusts_capacity() {
+    Vector v(2);
+
+    // insert 18 values
+    v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1);
+    v.push(1); v.push(1); v.push(1); v.push(1);
+    v.push(1); v.push(1); v.push(1); v.push(1);
+    v.push(1); v.push(1);
+
+    assert(v.getCapacity() == 32);
+    assert(v.getSize() == 18);
+    assert(v.at(16) == 1);
+    assert(v.at(17) == 1);
+    assert(v.at(5) == 1);
+    assert(v.at(15) == 1);
+    assert(v.at(1) == 1);
+
+
+    printf("OK -- test test_v_push_adjusts_capacity\n");
 }
 
 void test_v_insert() {
@@ -91,13 +115,27 @@ void test_v_insert() {
     assert(v.at(2) == 14);
     assert(v.at(3) == 13);
 
+
     printf("OK -- test_v_insert\n");
+}
+
+void test_v_emptyPop() {
+    Vector v(2);
+
+    bool exceptionOccurred = false;
+    try {
+        v.pop();
+    } catch (Vector::IndexOutOfBoundException &ex) {
+        exceptionOccurred = true;
+    }
+    assert(exceptionOccurred);
+
+
+    printf("OK -- test_v_emptyPop\n");
 }
 
 void test_v_pop() {
     Vector v(2);
-
-    // v.pop(); exit is called
 
     v.push(1);
     int popped = v.pop();
@@ -109,7 +147,6 @@ void test_v_pop() {
 
     int popped3 = v.pop();
     int popped2 = v.pop();
-
 
     assert(popped2 == 2);
     assert(popped3 == 3);
@@ -191,52 +228,6 @@ void test_v_delete_with_capacity_change() {
     printf("OK -- test_v_delete_with_capacity_change\n");
 }
 
-void test_v_pop_empty() {
-    Vector v(2);
-
-    //TODO
-
-
-    printf("OK -- test_v_\n");
-}
-
-void test_v_push_adjusts_capacity() {
-//    Vector v(2);
-//
-//    v.push(5);
-//    assert(v.at(0) == 5);
-//    assert(v.getSize() == 1);
-//
-//    v.push(4);
-//    assert(v.at(0) == 5);
-//    assert(v.at(1) == 4);
-//    assert(v.getSize() == 2);
-//
-//    v.push(3);
-//    assert(v.at(2) == 3);
-//
-//    printf("OK -- test_v_push\n");
-
-    Vector v(2);
-
-    // insert 18 values
-    v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1); v.push(1);
-    v.push(1); v.push(1); v.push(1); v.push(1);
-    v.push(1); v.push(1); v.push(1); v.push(1);
-    v.push(1); v.push(1);
-
-    assert(v.getCapacity() == 32);
-    assert(v.getSize() == 18);
-    assert(v.at(16) == 1);
-    assert(v.at(17) == 1);
-    assert(v.at(5) == 1);
-    assert(v.at(15) == 1);
-    assert(v.at(1) == 1);
-
-
-    printf("OK -- test test_v_push_adjusts_capacity\n");
-}
-
 void test_v_pop_adjusts_capacity() {
     Vector v;
 
@@ -267,9 +258,15 @@ void test_v_pop_adjusts_capacity() {
 
 void test_v_at() {
     Vector v(5);
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 18; i++) {
         v.push(i);
     }
+
+    assert(v.at(0) == 0);
+    assert(v.at(5) == 5);
+    assert(v.at(15) == 15);
+    assert(v.at(16) == 16);
+    assert(v.at(17) == 17);
 
 
     printf("OK -- test_v_at\n");
@@ -364,27 +361,17 @@ void test_v_remove() {
     printf("OK -- test_v_remove\n");
 }
 
-void test_v_() {
-    Vector v(2);
 
-
-
-
-    printf("OK -- test_v_\n");
-}
 /**********************  MAIN  *****************/
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-
     test_initialization();
     test_empty_initialization();
     test_v_is_empty_for_empty_initialization();
     test_v_at();
     test_v_push();
-
     test_v_push_adjusts_capacity();
-    std::cout << "Hello, World!" << std::endl;
+    test_v_emptyPop();
     test_v_pop();
     test_v_pop_adjusts_capacity();
     test_v_insert();
