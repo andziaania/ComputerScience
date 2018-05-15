@@ -176,6 +176,6 @@ void Vector::assertIndexInBounds(size_t index, bool allowEqualToSize) {
     }
 }
 
-const char *Vector::IndexOutOfBoundException::what() const {
+const char *Vector::IndexOutOfBoundException::what() const noexcept {
     return "IndexOutOfBoundException";
 }

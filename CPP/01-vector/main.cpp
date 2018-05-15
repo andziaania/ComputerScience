@@ -29,10 +29,10 @@ void test_initialization() {
     assert(v2.getCapacity() == 32);
 
     Vector v3((size_t) pow(2, 9) - 3);
-    assert(v.getCapacity() == pow(2, 9));
+    assert(v3.getCapacity() == pow(2, 9));
 
     Vector v4((size_t) pow(2, 9));
-    assert(v.getCapacity() == pow(2, 9));
+    assert(v4.getCapacity() == pow(2, 9));
 
 
     printf("OK -- test_initialization\n");
